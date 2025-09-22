@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: event-ease-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_event_ease
+    ports:
+      - "3310:3306"
+    volumes:
+      - event-ease-mysql-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8083:8080"
+
+volumes:
+  event-ease-mysql-data:
