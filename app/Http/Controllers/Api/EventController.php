@@ -49,9 +49,20 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'sometimes|required|max:255',
+            'description' => 'nullable|string',
+            'location' => 'sometimes|required|string',
+            'capacity' => 'nullable|integer|max:255',
+            'start' => 'sometimes|required|date',
+            'end' => 'sometimes|required|date|after:start'
+        ]);
+
+        $event->update($validated);
+
+        return $event;
     }
 
     /**
