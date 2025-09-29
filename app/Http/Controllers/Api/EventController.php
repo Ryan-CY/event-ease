@@ -21,7 +21,21 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'location' => 'required|string',
+            'capacity' => 'nullable|integer|max:255',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start'
+        ]);
+
+        $validated['user_id'] = 1; // temporary use
+
+        $event = Event::create($validated);
+
+        return $event;
     }
 
     /**
