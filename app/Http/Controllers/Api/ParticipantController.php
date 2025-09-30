@@ -51,8 +51,10 @@ class ParticipantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Event $event, Participant $participant)
     {
-        //
+        $participant->delete();
+
+        return response(status: 204);
     }
 }
