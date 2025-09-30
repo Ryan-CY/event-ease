@@ -22,9 +22,13 @@ class ParticipantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Event $event)
     {
-        //
+        $participant = $event->participants()->create([
+            'user_id' => 1 // temporary use
+        ]);
+
+        return new ParticipantResource($participant);
     }
 
     /**
