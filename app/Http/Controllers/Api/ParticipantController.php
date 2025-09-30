@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParticipantResource;
 use App\Models\Event;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
@@ -34,9 +35,9 @@ class ParticipantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Event $event, Participant $participant)
     {
-        //
+        return new ParticipantResource($participant);
     }
 
     /**
