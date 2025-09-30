@@ -23,7 +23,7 @@ class EventResource extends JsonResource
         'end' => $this->end,
         'capacity' => $this->capacity,
         'organizer' => new UserResource($this->whenLoaded('user')),
-        'participants' => ParticipantResource::collection($this->whenLoaded('participant')),
+        'participants' => ParticipantResource::collection($this->whenLoaded('participants')),
         ];;
     }
 }
