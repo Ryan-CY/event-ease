@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Event::all();
+        return EventResource::collection(Event::with(['user', 'participant'])->paginate());
     }
 
     /**
@@ -35,7 +36,7 @@ class EventController extends Controller
 
         $event = Event::create($validated);
 
-        return $event;
+        return new EventResource($event);
     }
 
     /**
@@ -43,7 +44,8 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event;
+        $event->load(['user', 'participant']);
+        return new EventResource($event);
     }
 
     /**
@@ -62,7 +64,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $event;
+        return new EventResource($event);
     }
 
     /**
