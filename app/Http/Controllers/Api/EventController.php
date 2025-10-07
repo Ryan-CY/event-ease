@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        // use middleware to protect all functions except indes and show
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +38,7 @@ class EventController extends Controller
             'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = 1; // temporary use
+        $validated['user_id'] = $request->user()->id;
 
         $event = Event::create($validated);
 
