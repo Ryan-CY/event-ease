@@ -31,6 +31,22 @@ class ParticipantController extends Controller
      */
     public function store(Request $request, Event $event)
     {
+        $userID = $request->user()->id;
+
+        $existedUser = $event->participants()->where('user_id', $userID)->exists();
+
+        if ($existedUser) {
+            return response()->json([
+                'message' => 'You have already participated this event'
+            ]);
+        }
+
+        if ($event->participants()->count() >= $event->capacity) {
+            return response()->json([
+                'message' => 'This event is full'
+            ]);
+        }
+
         $participant = $event->participants()->create([
             'user_id' => $request->user()->id
         ]);
