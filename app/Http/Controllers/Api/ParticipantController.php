@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
+        public function __construct()
+    {
+        // use middleware to protect all functions except indes and show
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -26,7 +32,7 @@ class ParticipantController extends Controller
     public function store(Request $request, Event $event)
     {
         $participant = $event->participants()->create([
-            'user_id' => 1 // temporary use
+            'user_id' => $request->user()->id
         ]);
 
         return new ParticipantResource($participant);
