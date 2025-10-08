@@ -11,8 +11,9 @@ class EventController extends Controller
 {
     public function __construct()
     {
-        // use middleware to protect all functions except indes and show
+        // use middleware to protect all functions except index and show
         $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->authorizeResource(Event::class, 'event');
     }
 
     /**
