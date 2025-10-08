@@ -14,6 +14,7 @@ class ParticipantController extends Controller
     {
         // use middleware to protect all functions except indes and show
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+        $this->authorizeResource(Participant::class, 'participant');
     }
 
     /**
