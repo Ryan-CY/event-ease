@@ -3,11 +3,16 @@
 @section('title', 'Event Ease - Event Details')
 
 @section('content')
+
 <div class="max-w-3xl mx-auto py-8">
-    <div class="mb-6">
+    <div class="flex justify-between items-center mb-6">
         <a href="{{ route('events.index') }}"
            class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
            ← Back to Event List
+        </a>
+        <a href="{{ route('events.edit', $event->id) }}"
+            class="px-3 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
+            Edit
         </a>
     </div>
 
