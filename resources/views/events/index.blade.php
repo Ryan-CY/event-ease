@@ -4,7 +4,22 @@
 
 @section('content')
 <div class="py-6">
-    <h1 class="text-3xl font-bold text-center mb-6">Event List</h1>
+    <div class="grid grid-cols-3 items-center mb-6">
+        <div></div>
+        <h1 class="text-3xl font-bold text-center">Event List</h1>
+        <div class="text-right">
+            <a href="{{ route('events.create') }}"
+            class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition">
+            Create Event
+            </a>
+        </div>
+    </div>
+
+    @if (session('success'))
+        <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
 
     @if ($events->count() > 0)
         <div class="overflow-x-auto shadow rounded-lg">
