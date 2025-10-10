@@ -37,7 +37,8 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     @foreach ($events as $event)
-                        <tr class="hover:bg-cyan-50 transition">
+                        <tr onclick="window.location='{{ route('events.show', $event) }}'"
+                        class="hover:bg-cyan-50 transition">
                             <td class="px-4 py-3">{{ $event->id }}</td>
                             <td class="px-4 py-3 font-medium text-gray-900">{{ $event->name }}</td>
                             <td class="px-4 py-3 text-gray-600">{{ Str::limit($event->description ?? '-', 70, '...') }}</td>
