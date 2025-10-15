@@ -10,10 +10,12 @@
            class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
            ← Back to Event List
         </a>
-        <a href="{{ route('events.edit', $event->id) }}"
-            class="px-3 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
-            Edit
-        </a>
+        @can('update', $event)
+            <a href="{{ route('events.edit', $event->id) }}"
+                class="px-3 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
+                Edit
+            </a>
+        @endcan
     </div>
 </div>
 
@@ -39,6 +41,7 @@
 
 <div class="max-w-3xl mx-auto">
     <div class="flex justify-end">
+        @can('delete', $event)
         <form action="{{ route('events.destroy', $event->id) }}" method="POST"
             onsubmit="return confirm('Are you sure you want to delete this event?');">
             @csrf
@@ -48,6 +51,7 @@
             Delete
             </button>
         </form>
+        @endcan
     </div>
 </div>
 

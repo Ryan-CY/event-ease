@@ -5,9 +5,16 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+        $this->authorizeResource(Event::class, 'event');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,7 +47,7 @@ class EventController extends Controller
             'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = 1;  // temporary use
+        $validated['user_id'] = Auth::id();
 
         $event = Event::create($validated);
 
@@ -79,7 +86,7 @@ class EventController extends Controller
         'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = 1;  // temporary use
+        $validated['user_id'] = Auth::id();
 
         $event->update($validated);
 
