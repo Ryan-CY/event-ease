@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use App\Services\EventService;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function __construct()
+    public function __construct(protected EventService $eventService)
     {
         // use middleware to protect all functions except index and show
         $this->middleware('auth:sanctum')->except(['index', 'show']);
@@ -39,9 +40,7 @@ class EventController extends Controller
             'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = $request->user()->id;
-
-        $event = Event::create($validated);
+        $event = $this->eventService->store($validated, $request->user()->id);
 
         return new EventResource($event);
     }
@@ -69,7 +68,7 @@ class EventController extends Controller
             'end' => 'sometimes|required|date|after:start'
         ]);
 
-        $event->update($validated);
+        $event = $this->eventService->update($validated, $event);
 
         return new EventResource($event);
     }
@@ -79,7 +78,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->delete();
+        $this->eventService->destroy($event);
 
         return response(status: 204);
     }

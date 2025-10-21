@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Services\EventService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    public function __construct()
+    public function __construct(protected EventService $eventService)
     {
         $this->middleware('auth')->except(['index', 'show']);
         $this->authorizeResource(Event::class, 'event');
@@ -47,11 +48,11 @@ class EventController extends Controller
             'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = Auth::id();
+        $event = $this->eventService->store($validated, Auth::id());
 
-        $event = Event::create($validated);
-
-        return redirect()->route('events.index')->with('success', 'New event created successfully');
+        return redirect()
+        ->route('events.index')
+        ->with('success', 'New event created successfully');
 
     }
 
@@ -86,11 +87,11 @@ class EventController extends Controller
         'end' => 'required|date|after:start'
         ]);
 
-        $validated['user_id'] = Auth::id();
+        $event = $this->eventService->update($validated, $event);
 
-        $event->update($validated);
-
-        return redirect()->route('events.index')->with('success', 'Event updated successfully');
+        return redirect()
+        ->route('events.index')
+        ->with('success', 'Event updated successfully');
     }
 
     /**
@@ -98,7 +99,9 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->delete();
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully');
+        $this->eventService->destroy($event);
+        return redirect()
+        ->route('events.index')
+        ->with('success', 'Event deleted successfully');
     }
 }
