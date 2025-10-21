@@ -10,35 +10,43 @@
            class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
            ← Back to Event List
         </a>
+
         @auth
-        @if (Auth::id() === $event->user_id)
-        <a href="{{ route('events.edit', $event->id) }}"
-            class="px-3 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
-            Edit
-        </a>
-        @elseif ($event->participants->contains('user_id', Auth::id()))
-        @php
-        $participant = $event->participants->where('user_id', Auth::id())->first();
-        @endphp
-        <form action="{{ route('events.participants.destroy', [$event, $participant]) }}" method="POST" 
-            onsubmit="return confirm('Are you sure you want to withdraw from this event?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-            class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition">
-            Withdraw
-            </button>
-        </form>
-        @else
-        <form action="{{ route('events.participants.store', $event->id) }}" method="POST">
-            @csrf
-            <button type="submit"
-            class="px-3 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition">
-            Join
-        </button>
-        </form>
-        @endif
+
+            @php
+                $participant = $event->participants->firstWhere('user_id', auth()->id());
+            @endphp
+
+            @can('update', $event)
+                <a href="{{ route('events.edit', $event) }}"
+                class="px-3 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
+                Edit
+                </a>
+                
+            @endcan
+
+            @can('create', [App\Models\Participant::class, $event]) {{-- find create function in ParticipantPolicy --}}
+                <form action="{{ route('events.participants.store', $event->id) }}" method="POST">
+                @csrf
+                <button type="submit"
+                class="px-3 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition">
+                Join
+                </button>
+                </form>
+            @elsecan('delete', $participant)
+                <form action="{{ route('events.participants.destroy', [$event, $participant]) }}" method="POST" 
+                onsubmit="return confirm('Are you sure you want to withdraw from this event?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition">
+                Withdraw
+                </button>
+                </form>
+            @endcan
+
         @endauth
+
     </div>
 </div>
 

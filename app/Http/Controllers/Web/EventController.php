@@ -20,7 +20,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(20);
+        $events = Event::withCount('participants')->paginate(20);
         return view('events.index', compact('events'));
     }
 
@@ -60,7 +60,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load('user', 'participants');
+        $event->load('participants.user')->loadCount('participants');
         return view('events.show', compact('event'));
     }
 
@@ -90,7 +90,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return redirect()->route('events.index')->with('success', 'Event edited successfully');
+        return redirect()->route('events.index')->with('success', 'Event updated successfully');
     }
 
     /**

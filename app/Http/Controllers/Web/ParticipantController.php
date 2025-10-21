@@ -13,7 +13,6 @@ class ParticipantController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->authorizeResource(Participant::class, 'participant');
     }
     
     /**
@@ -37,6 +36,10 @@ class ParticipantController extends Controller
      */
     public function store(Request $request, Event $event)
     {
+        $event->loadCount('participants'); // have to run before authorization
+
+        $this->authorize('create', [Participant::class, $event]);
+        
         $event->participants()->create([
             'user_id' => Auth::id()
         ]);
@@ -73,6 +76,8 @@ class ParticipantController extends Controller
      */
     public function destroy(Event $event, Participant $participant)
     {
+        $this->authorize('delete', $participant);
+
         $participant->delete();
 
         return redirect()->route('events.index')->with('success', 'Withdrawn successfully');

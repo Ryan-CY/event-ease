@@ -10,11 +10,10 @@ use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-        public function __construct()
+    public function __construct()
     {
         // use middleware to protect all functions except indes and show
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
-        $this->authorizeResource(Participant::class, 'participant');
     }
 
     /**
@@ -32,21 +31,9 @@ class ParticipantController extends Controller
      */
     public function store(Request $request, Event $event)
     {
-        $userID = $request->user()->id;
+        $event->loadCount('participants'); // have to run before authorization
 
-        $existedUser = $event->participants()->where('user_id', $userID)->exists();
-
-        if ($existedUser) {
-            return response()->json([
-                'message' => 'You have already participated this event'
-            ]);
-        }
-
-        if ($event->participants()->count() >= $event->capacity) {
-            return response()->json([
-                'message' => 'This event is full'
-            ]);
-        }
+        $this->authorize('create', [Participant::class, $event]);
 
         $participant = $event->participants()->create([
             'user_id' => $request->user()->id
@@ -76,6 +63,8 @@ class ParticipantController extends Controller
      */
     public function destroy(Event $event, Participant $participant)
     {
+        $this->authorize('delete', $participant);
+
         $participant->delete();
 
         return response(status: 204);
