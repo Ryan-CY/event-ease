@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Services\EventService;
+use App\Traits\EventValidationRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    use EventValidationRules;
+
     public function __construct(protected EventService $eventService)
     {
         $this->middleware('auth')->except(['index', 'show']);
@@ -39,14 +42,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string',
-            'capacity' => 'nullable|integer|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start'
-        ]);
+        $validated = $request->validate($this->storeValidationRule());
 
         $event = $this->eventService->store($validated, Auth::id());
 
@@ -78,14 +74,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'location' => 'required|string',
-        'capacity' => 'nullable|integer|max:255',
-        'start' => 'required|date',
-        'end' => 'required|date|after:start'
-        ]);
+        $validated = $request->validate($this->updateVlidationRules());
 
         $event = $this->eventService->update($validated, $event);
 

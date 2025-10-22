@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\EventService;
+use App\Traits\EventValidationRules;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    use EventValidationRules;
+
     public function __construct(protected EventService $eventService)
     {
         // use middleware to protect all functions except index and show
@@ -31,14 +34,7 @@ class EventController extends Controller
     public function store(Request $request)
     {
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string',
-            'capacity' => 'nullable|integer|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start'
-        ]);
+        $validated = $request->validate($this->storeValidationRule());
 
         $event = $this->eventService->store($validated, $request->user()->id);
 
@@ -59,14 +55,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|max:255',
-            'description' => 'nullable|string',
-            'location' => 'sometimes|required|string',
-            'capacity' => 'nullable|integer|max:255',
-            'start' => 'sometimes|required|date',
-            'end' => 'sometimes|required|date|after:start'
-        ]);
+        $validated = $request->validate($this->updateVlidationRules());
 
         $event = $this->eventService->update($validated, $event);
 
