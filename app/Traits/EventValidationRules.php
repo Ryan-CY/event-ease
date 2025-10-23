@@ -16,7 +16,7 @@ trait EventValidationRules
         ];
     }
 
-    protected function updateVlidationRules(): array
+    protected function updateValidationRules(): array
     {
         return [
             'name' => 'sometimes|required|max:255',

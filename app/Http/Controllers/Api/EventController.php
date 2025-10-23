@@ -7,11 +7,15 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\EventService;
 use App\Traits\EventValidationRules;
+use App\Traits\LoadRelationships;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
     use EventValidationRules;
+    use LoadRelationships;
+
+    protected array $relations = ['user', 'participants'];
 
     public function __construct(protected EventService $eventService)
     {
@@ -25,7 +29,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        return EventResource::collection(Event::with(['user', 'participants'])->paginate());
+        $query = $this->loadRelationships(Event::query());
+        return EventResource::collection($query->paginate(20));
     }
 
     /**
@@ -38,7 +43,7 @@ class EventController extends Controller
 
         $event = $this->eventService->store($validated, $request->user()->id);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -46,8 +51,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['user', 'participants']);
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
@@ -55,11 +59,11 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validated = $request->validate($this->updateVlidationRules());
+        $validated = $request->validate($this->updateValidationRules());
 
         $event = $this->eventService->update($validated, $event);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     /**
