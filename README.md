@@ -1,61 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎟️ Event Ease — Event Registration & Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel backend application for event management, and participant registration.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📘 Project Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Event Ease** is a **backend Laravel application** built with the **MVC (Model–View–Controller)** architecture.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+It provides both **Web (Blade-based)** and **RESTful API** interfaces for managing events and participant registration.
 
-## Learning Laravel
+Users can:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Create, update, and delete events
+- View event details via web pages or API endpoints
+- Register for or withdraw from events
+- Authenticate and manage access via **Laravel Sanctum**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+The project uses a **Service Layer** to centralize business logic shared between Web and API controllers, ensuring maintainability, scalability, and cleaner code.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+It also supports **dynamic relationship loading** using the `?include=` query parameter, allowing flexible and optimized API responses.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🏃‍♂️  How to Run the Project
 
-### Premium Partners
+### Prerequisites
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Make sure the following tools are installed:
 
-## Contributing
+- PHP 8.4+
+- Composer
+- Docker
+- Git
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### Setup Instructions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+# 1️⃣ Clone the repository
+git clone https://github.com/Ryan-CY/event-ease.git
+cd event-ease
 
-## Security Vulnerabilities
+# 2️⃣ Install dependencies
+composer install
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 3️⃣ Configure environment
+cp .env.example .env
+php artisan key:generate
 
-## License
+# 4️⃣ Start MySQL container
+docker-compose up -d
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 5️⃣ Run migrations and seed test data
+php artisan migrate --seed
+
+# 6️⃣ Serve the Laravel application locally
+php artisan serve
+```
+
+- 🌐 Web Interface → http://localhost:8000/events
+- 🔗 API Endpoint → http://localhost:8000/api/events
+
+---
+
+## 💡 Tech Stack
+
+| Category | Technology / Tool | Description |
+| --- | --- | --- |
+| **Framework** | Laravel 12.21 (PHP 8.4) | Backend framework built on the MVC architecture |
+| **Database** | MySQL 9.3 | Stores users, events, and participant records |
+| **Authentication** | Laravel Sanctum | Token-based authentication for API and session login for Web |
+| **Architecture** | MVC + Service Layer | Separation of concerns with centralized business logic |
+| **View Engine** | Blade + Tailwind CSS | Server-rendered templates for Web interface |
+| **ORM** | Eloquent ORM | Defines model relationships and handles database queries |
+| **Validation** | Form Request / EventValidationRules Trait | Centralized validation for both Web and API controllers |
+| **Development Tools** | Docker (MySQL), Composer, VS Code, Git | Containerized DB setup and modern PHP development workflow |
+
+---
+
+## 🌟 Core Features
+
+| Aspect | Description |
+| --- | --- |
+| **Clean Architecture** | Combines Laravel’s **MVC** pattern with a custom **Service Layer** to separate concerns and improve maintainability. |
+| **Dual Interface** | Supports both **Web (Blade)** and **RESTful API** layers within the same backend. |
+| **Dynamic Relationship Loading** | `LoadRelationships` trait enables dynamic eager loading via `?include=` for flexible data retrieval. |
+| **Service Layer Abstraction** | Common business logic is centralized in the `EventService` to prevent code duplication between Web and API controllers. |
+| **Consistent Validation** | Centralized rules in `EventValidationRules` ensure uniform validation across controllers. |
+| **Secure Authentication** | Laravel Sanctum provides **token-based API** security and **session-based Web** login. |
+| **Authorization & Policies** | Access control is implemented through Laravel Policies to ensure secure CRUD operations. |
+| **Database-Driven Design** | Uses Eloquent ORM with relationships between `User`, `Event`, and `Participant`. |
+| **Readable Commit History** | Follows **Conventional Commits** for clear, semantic version tracking. |
+
+---
+## 👨‍💻 Project Maintainer
+
+Ryan Lin
+- 💡 Software & Programming Enthusiast
+- 📧 phillin820109@msn.com
+
+---
+
+## ⚖️ License
+
+This project is open-sourced under the **MIT License**.
+
+---
