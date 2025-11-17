@@ -74,7 +74,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validated = $request->validate($this->updateVlidationRules());
+        $validated = $request->validate($this->updateValidationRules());
 
         $event = $this->eventService->update($validated, $event);
 
