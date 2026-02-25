@@ -12,9 +12,18 @@ trait LoadRelationships
         // If $relations is not provided (null), use the default $this->relations property.
         $relations ??= $this->relations;
         foreach ($relations as $relation) {
+            if ($this->includeRelation($relation)) {
+                if ($target instanceof Model) {
+                    $target->load($relation);
+                } else {
+                    $target->with($relation);
+                }
+            }
+            /*
             $target->when(
                 $this->includeRelation($relation),
                 fn($q) => $target instanceof Model ? $target->load($relation) : $q->with($relation));
+            */
         }
         return $target;
     }
